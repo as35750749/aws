@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>AI 偶像互動</title>
+</head>
+<body style="font-family: sans-serif; text-align:center; margin-top: 5rem">
+  <h1>🎤 與 AI 偶像互動</h1>
+  <form id="upload-form" enctype="multipart/form-data">
+    <input type="file" name="audio" accept="audio/*" required><br><br>
+    <button type="submit">上傳語音</button>
+  </form>
+
+  <h3 id="response-text"></h3>
+  <video id="idol-video" controls style="max-width: 480px; margin-top: 1rem; display: none;"></video>
+
+  <script>
+    const form = document.getElementById('upload-form');
+    const video = document.getElementById('idol-video');
+    const responseText = document.getElementById('response-text');
+
+    form.onsubmit = async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const res = await fetch('/talk', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      responseText.innerText = data.text;
+      video.src = data.video;
+      video.style.display = 'block';
+    }
+  </script>
+</body>
+</html>
